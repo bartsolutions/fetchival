@@ -18,6 +18,11 @@
     'response': true
   }
 
+  function is(type, obj) {
+    var clas = Object.prototype.toString.call(obj).slice(8, -1);
+    return obj !== undefined && obj !== null && clas === type;
+  }
+
   function noop(v) { return v }
   var encodeHandlers = {
     'none': noop, false: noop, null: noop,
@@ -48,6 +53,10 @@
         opts.encodeAs = encodeHandlers[opts.encodeAs] || encodeHandlers.json
       }
       opts.body = opts.encodeAs(data)
+    }
+
+    if (is('FormData', data)) {
+      delete opts.headers['Content-Type'];
     }
 
     if (opts.beforeFetch) {
